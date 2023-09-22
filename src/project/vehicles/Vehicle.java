@@ -27,19 +27,29 @@ public class Vehicle extends Thread implements Serializable {
     public Vehicle(){
 
     }
-    public Integer checkTerminals(){
+    public Integer checkTerminals(String type){
         //TODO
         return -1;
     }
     public void run(){
-        if(position == 0){
-            while(checkTerminals()<0){
-            Thread.yield();
-            };
-        }else if(position >0){
-            if(queue.get(position-1)==null){
-
+        while(true){
+            if(position == 0){
+                Integer freeTerminal=checkTerminals("police");
+                if(freeTerminal>=0){
+                    //TODO
+                }
+            }else if(position ==-1){
+                Integer freeTerminal=checkTerminals("customs");
+                if(freeTerminal>=0){
+                    //TODO
+                }
+            }else if(position >0){
+                if(queue.get(position-1)==null){
+                    queue.set(position-1,this);
+                    queue.set(position,null);
+                }
             }
         }
+        
     }
 }
