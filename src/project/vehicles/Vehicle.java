@@ -17,13 +17,29 @@ public class Vehicle extends Thread implements Serializable {
             e.printStackTrace();
         }
     }
+    public static List<Vehicle> queue;
+    public static void setList(List<Vehicle> l){
+        queue = l;
+    }
     public Integer position=-2;
     public Integer maxCapacity=3;
     protected List<Passenger> passengers = Collections.synchronizedList(new ArrayList<>());
     public Vehicle(){
 
     }
+    public Integer checkTerminals(){
+        //TODO
+        return -1;
+    }
     public void run(){
-        if()
+        if(position == 0){
+            while(checkTerminals()<0){
+            Thread.yield();
+            };
+        }else if(position >0){
+            if(queue.get(position-1)==null){
+
+            }
+        }
     }
 }
