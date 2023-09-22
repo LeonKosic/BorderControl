@@ -1,0 +1,20 @@
+package src.project.passengers;
+
+import java.io.Serializable;
+import src.project.passengers.items.Id;
+public class Person implements Serializable {
+    public Id id;
+    public String name;
+    
+    public Person(Id id,String name){
+        this.id=id;
+        this.name=name;
+    }
+    @Override
+    public boolean equals(Object o){
+        if( o instanceof Person p){
+            return id.equals((p.id));
+        }
+        return false;
+    }
+}
