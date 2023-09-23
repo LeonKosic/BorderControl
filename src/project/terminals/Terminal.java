@@ -11,7 +11,7 @@ import src.project.vehicles.Vehicle;
 public abstract class Terminal extends Thread implements TerminalInterface,Serializable {
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"terminal"+System.nanoTime()+".log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+"logs"+File.separator+"log"+System.nanoTime()+"terminal.log";
             Logger.getLogger(Terminal.class.getName()).addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();

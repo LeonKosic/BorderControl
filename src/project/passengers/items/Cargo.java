@@ -7,7 +7,7 @@ public class Cargo implements Serializable{
     private boolean valid;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Cargo"+System.nanoTime()+".log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+File.separator+"Cargo.log";
             Logger.getLogger(Cargo.class.getName()).addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();

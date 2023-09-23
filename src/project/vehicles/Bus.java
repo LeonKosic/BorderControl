@@ -6,7 +6,7 @@ import src.project.passengers.Passenger;
 
 public class Bus extends Vehicle{
     public static Integer maxCapacity=52;
-    public boolean needDeclaration;
+    public boolean needDeclaration=false;
     public Bus(List<Passenger> pass, String name){
         super(pass,name);
     }   

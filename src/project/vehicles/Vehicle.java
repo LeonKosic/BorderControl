@@ -7,17 +7,19 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import src.project.passengers.items.Doc;
 import src.project.passengers.Passenger;
 import src.project.terminals.TerminalInterface;
 public abstract class Vehicle extends Thread implements Serializable {
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"vehicle"+System.nanoTime()+".log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"vehicle.log";
             Logger.getLogger(Vehicle.class.getName()).addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+    protected Doc declaration=null;
     public static List<Vehicle> queue;
     public Integer position=-2;
     protected Integer maxCapacity=3;
