@@ -26,7 +26,6 @@ public abstract class Vehicle extends Thread implements Serializable {
     public Integer position;
     protected Integer maxCapacity=3;
     protected String name;
-    private Boolean passedPolice=false;
     private Boolean passedCustoms=false;
     private Boolean deniedPassage=false;
     public static List<Terminal> terminals=Collections.synchronizedList(new ArrayList<>());
@@ -35,10 +34,24 @@ public abstract class Vehicle extends Thread implements Serializable {
         this.name=name;
         this.passengers=pass;
     }
+    public List<Passenger> getPassengers(){
+        return passengers;
+    }
     public void notifyPassedPolice(){
-        passedPolice=true;
+        Integer freeTerminal=checkTerminals("customs");
+        while(freeTerminal==-1){
+            freeTerminal=checkTerminals("customs");
+            try{
+                Thread.sleep(100);
+            }catch(InterruptedException e){
+                log.warning(e.getMessage());
+            }
+        }
+        position=-2;
     }
     public void notifyPassedCustoms(){
+        numPassed++;
+        System.out.println(numPassed);
         passedCustoms=true;
     }
     public void notifyDeniedPassage(){
@@ -62,6 +75,7 @@ public abstract class Vehicle extends Thread implements Serializable {
         }
         return -1;
     }
+    public static int numPassed=0;
     public void run(){
         while(true){
             if(deniedPassage){
@@ -73,14 +87,13 @@ public abstract class Vehicle extends Thread implements Serializable {
                     queue.set(position,null);
                     position--;
                 }
-            }else if(position == 0||(position==-1&&passedPolice)){
-                Integer freeTerminal=(position==0)?checkTerminals("police"):checkTerminals("customs");
+            }else if(position == 0){
+                Integer freeTerminal=checkTerminals("police");
                 if(freeTerminal>=0){
-                    if(position==0)queue.set(0,null);
-                    position-=1;
+                    queue.set(0,null);
+                    position=-1;
                 }
             }else if(passedCustoms){
-                
                 break;
             }
             try{

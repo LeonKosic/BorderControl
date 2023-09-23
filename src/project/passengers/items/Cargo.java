@@ -16,7 +16,7 @@ public class Cargo implements Serializable{
     public Cargo(){
         valid=(Math.random()>0.1);
     }
-    public boolean checkValidity(){
+    public boolean checkCargo(){
         return valid;
     }
 }

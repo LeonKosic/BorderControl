@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 
 public class Id implements Serializable {
+    private Boolean valid=true;
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"id.log";
@@ -16,7 +17,11 @@ public class Id implements Serializable {
         }
     }
     int num;
+    public Boolean checkId(){
+        return valid;
+    }
     public Id(int num){
         this.num=num;
+        if(Math.random()<=0.03)valid=false;
     }
 }

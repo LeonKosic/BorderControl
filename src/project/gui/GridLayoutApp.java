@@ -4,10 +4,14 @@ import javax.swing.*;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import src.project.terminals.Terminal;
+import src.project.vehicles.Bus;
+import src.project.vehicles.Car;
+import src.project.vehicles.Truck;
 import src.project.vehicles.Vehicle;
 public class GridLayoutApp extends JFrame{
     GridLayout mainLayout = new GridLayout(0,3);
@@ -30,8 +34,32 @@ public class GridLayoutApp extends JFrame{
     }
     public void updateComponents(){
         for(int i=0;i<5;i++){
+            Vehicle ter=terminals.get(i).getCurrent();
+            JButton butt=termButtons.get(i);
+            if(ter==null){
+                butt.setBackground(Color.darkGray);
+            }else{
+                butt.setBackground(Color.orange);
+            }
+        }
+        for(int i=0;i<5;i++){
+            Vehicle veh=vehicles.get(i);
+            JButton butt=firstVehs.get(i);
+            if(veh instanceof Car){
+                butt.setBackground(Color.red);
+                butt.setText("V");
+            }else if(veh instanceof Truck){
+                butt.setBackground(Color.blue);
+                butt.setText("K");
+            }else if(veh instanceof Bus){
+                butt.setBackground(Color.cyan);
+                butt.setText("A");
+            }else{ 
+                butt.setBackground(Color.gray);
+                butt.setText("X");
+            }
             firstVehs.get(i).addActionListener(e->{
-                System.out.print(e);
+                System.out.println(veh.getName());
             });
         }
     }

@@ -2,7 +2,7 @@ package src.project.passengers;
 
 import java.io.Serializable;
 import src.project.passengers.items.Id;
-public class Person implements Serializable {
+public abstract class Person implements Serializable {
     public Id id;
     public String name;
     
@@ -16,5 +16,8 @@ public class Person implements Serializable {
             return id.equals((p.id));
         }
         return false;
+    }
+    public Boolean checkId(){
+        return id.checkId();
     }
 }

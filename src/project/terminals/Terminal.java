@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
+import src.project.passengers.Passenger;
+import java.util.List;
 import src.project.vehicles.Bus;
 import src.project.vehicles.Car;
 import src.project.vehicles.Vehicle;
@@ -33,19 +34,8 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
         }
         return false;
     }
-    public void handle(){
-        if(true){ //TODO
-            current.notifyDeniedPassage();
-        }else if(type=="police"){
-            current.notifyPassedPolice();
-        }else if(type =="customs"){
-            current.notifyPassedCustoms();
-        }
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException e){
-            log.warning(e.getMessage());
-        }
+    public Vehicle getCurrent(){
+        return current;
     }
     public synchronized void clearTerminal(){
         this.current=null;
