@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import src.project.vehicles.Vehicle;
 
 
-public class Terminal extends Thread implements Serializable {
+public abstract class Terminal extends Thread implements TerminalInterface,Serializable {
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"terminal"+System.nanoTime()+".log";
@@ -17,6 +17,7 @@ public class Terminal extends Thread implements Serializable {
             e.printStackTrace();
         }
     }
+    protected String type;
     protected Vehicle current;
     public synchronized void clearTerminal(){
         this.current=null;
@@ -26,6 +27,8 @@ public class Terminal extends Thread implements Serializable {
         while(true){
             Thread.yield();
             if(current!=null){
+                handle(type,current);
+                clearTerminal();
             }
         }
     }

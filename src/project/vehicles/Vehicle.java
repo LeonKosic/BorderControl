@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import src.project.passengers.Passenger;
-public class Vehicle extends Thread implements Serializable {
+import src.project.terminals.TerminalInterface;
+public abstract class Vehicle extends Thread implements Serializable {
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"vehicle"+System.nanoTime()+".log";
@@ -18,37 +19,50 @@ public class Vehicle extends Thread implements Serializable {
         }
     }
     public static List<Vehicle> queue;
+    public Integer position=-2;
+    protected Integer maxCapacity=3;
+    protected String name;
+    public static List<TerminalInterface> terminals=Collections.synchronizedList(new ArrayList<>());
+    protected List<Passenger> passengers = Collections.synchronizedList(new ArrayList<>());
+    public Vehicle(List<Passenger> pass, String name){
+        this.name=name;
+        this.passengers=pass;
+    }
     public static void setList(List<Vehicle> l){
         queue = l;
-    }
-    public Integer position=-2;
-    public Integer maxCapacity=3;
-    protected List<Passenger> passengers = Collections.synchronizedList(new ArrayList<>());
-    public Vehicle(){
-
+        Integer i=0;
+        for(Vehicle el:queue){
+            el.position=i;
+            i+=1;
+        }
     }
     public Integer checkTerminals(String type){
-        //TODO
+        Integer i=0;
+        for(TerminalInterface el:terminals){
+            if(el.access(type,this)){
+                return i;
+            }
+            i++;
+        }
         return -1;
     }
     public void run(){
         while(true){
-            if(position == 0){
-                Integer freeTerminal=checkTerminals("police");
-                if(freeTerminal>=0){
-                    //TODO
-                }
-            }else if(position ==-1){
-                Integer freeTerminal=checkTerminals("customs");
-                if(freeTerminal>=0){
-                    //TODO
-                }
-            }else if(position >0){
+            
+            if(position >0){
                 if(queue.get(position-1)==null){
                     queue.set(position-1,this);
                     queue.set(position,null);
                 }
+            }else if(position >= -1){
+                Integer freeTerminal=(position==0)?checkTerminals("police"):checkTerminals("customs");
+                if(freeTerminal>=0){
+                    //TODO
+                }
+            }else{
+                break;
             }
+                
         }
         
     }

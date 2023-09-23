@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import src.project.passengers.items.Id;
-public class PassengerGenerator {
+import java.util.Random;
+public final class PassengerGenerator {
     private static int increment=0;
-    public static List<Passenger> generate(int NumPassengers){
+    private final static Random rand =  new java.util.Random();;
+    public final static List<Passenger> generate(int NumPassengers){
          List<Passenger> res = Collections.synchronizedList(new ArrayList<>());
-         for(int i=0;i<NumPassengers;i++){
-            res.add(new Passenger(new Id(increment++), "Test test"));
+         for(int i=0;i<NumPassengers-rand.nextInt(NumPassengers);i++){
+            res.add(new Passenger(new Id(increment++), NameGenerator.generateName()));
          }
          return res;
     }
