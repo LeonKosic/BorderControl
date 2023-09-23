@@ -5,10 +5,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.List;
+import src.project.vehicles.Vehicle;
 public class GridLayoutApp extends JFrame{
     GridLayout mainLayout = new GridLayout(0,3);
+    public static List<Vehicle> vehicles;
     private final ArrayList<JButton> terminals=new ArrayList<JButton>();
     private final ArrayList<JButton> firstVehs=new ArrayList<JButton>(); 
+    JButton pause = new JButton("Pause");
+    JButton others= new JButton("Others");
+    JButton finished = new JButton("Finished");
+    JButton issues = new JButton ("Issues");
     public GridLayoutApp(String name){
        super(name);
     }
@@ -17,8 +24,8 @@ public class GridLayoutApp extends JFrame{
         mainLayout.setVgap(x);
     }
     public void updateComponents(){
-        for(JButton x : firstVehs){
-            x.setText("bb");
+        for(int i=0;i<5;i++){
+            
         }
     }
     public void addComponentsMain(final Container pane){
@@ -46,10 +53,10 @@ public class GridLayoutApp extends JFrame{
             panel.add(firstVehs.get(i));
             panel.add(new JLabel(""));
         }
-        options.add(new JButton("Pause"));
-        options.add(new JButton("Other vehicles"));
-        options.add(new JButton("Show finished"));
-        options.add(new JButton("Issues"));
+        options.add(pause);
+        options.add(others);
+        options.add(finished);
+        options.add(issues);
        
         pane.add(panel,BorderLayout.NORTH);
         pane.add(new JSeparator(),BorderLayout.CENTER);

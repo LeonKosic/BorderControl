@@ -25,7 +25,7 @@ public class Simulation extends Thread {
             e.printStackTrace();
         }
     }
-     private static void createAndShowGUI() {
+    private static void createAndShowGUI() {
         frame = new GridLayoutApp("Border control");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addComponentsMain(frame.getContentPane());
@@ -35,6 +35,7 @@ public class Simulation extends Thread {
     @Override
     public void run(){
         List<Vehicle> vehicles=VehicleGenerator.generate();
+        GridLayoutApp.vehicles=vehicles;
         //System.out.println(Arrays.toString(vehicles.toArray()));
         createAndShowGUI();
         while(true){
