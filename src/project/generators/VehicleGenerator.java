@@ -21,6 +21,7 @@ public final class VehicleGenerator {
         for(int i=0;i<numTrucks;i++){
             res.add(new Truck(PassengerGenerator.generate(Truck.maxCapacity),"Truck"+NameGenerator.generateReg()));
         }
+        Collections.shuffle(res);
         return res;
     }
 }

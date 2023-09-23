@@ -27,6 +27,11 @@ public class TruckCustomsTerminal extends CustomsTerminal{
     }
     @Override
     protected Boolean specialCheck(){
+        try{
+            Thread.sleep(1500);
+        }catch(InterruptedException e){
+            log.warning(e.getMessage());
+        }
         Truck truck = (Truck) current;
         if(truck.needDoc){
             truck.generateDocumentation();
