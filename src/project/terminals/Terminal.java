@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import src.project.vehicles.Bus;
+import src.project.vehicles.Car;
 import src.project.vehicles.Vehicle;
 
 
@@ -19,6 +21,19 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
     }
     protected String type;
     protected Vehicle current;
+    public Boolean checkType(Vehicle veh){
+        return(veh instanceof Car || veh instanceof Bus);
+    }
+    public synchronized Boolean access(String type,Vehicle veh){
+        if(current==null&&type==this.type&&checkType(veh)){
+            current=veh;
+            return true;
+        }
+        return false;
+    }
+    public void handle(){
+        
+    }
     public synchronized void clearTerminal(){
         this.current=null;
     }
@@ -27,7 +42,7 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
         while(true){
             Thread.yield();
             if(current!=null){
-                handle(type,current);
+                handle();
                 clearTerminal();
             }
         }

@@ -1,17 +1,21 @@
 package src.project.Simulation;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
 import javax.swing.JFrame;
-
 import src.project.generators.VehicleGenerator;
 import src.project.gui.GridLayoutApp;
 import src.project.passengers.items.Id;
+import src.project.terminals.CustomsTerminal;
+import src.project.terminals.PoliceTerminal;
+import src.project.terminals.Terminal;
+import src.project.terminals.TruckCustomsTerminal;
+import src.project.terminals.TruckPoliceTerminal;
 import src.project.vehicles.Vehicle;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 public class Simulation extends Thread {
     private static Logger log;
@@ -25,8 +29,8 @@ public class Simulation extends Thread {
             e.printStackTrace();
         }
     }
-     private static void createAndShowGUI() {
-        frame = new GridLayoutApp("Border control");
+    private static void createAndShowGUI(List<Vehicle> veh,List<Terminal> ter) {
+        frame = new GridLayoutApp("Border control",veh,ter);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addComponentsMain(frame.getContentPane());
         frame.pack();
@@ -35,8 +39,15 @@ public class Simulation extends Thread {
     @Override
     public void run(){
         List<Vehicle> vehicles=VehicleGenerator.generate();
-        //System.out.println(Arrays.toString(vehicles.toArray()));
-        createAndShowGUI();
+        List<Terminal> terminals = Collections.synchronizedList(new ArrayList<>());
+        terminals.addAll(List.of(new CustomsTerminal(),new TruckCustomsTerminal(),new PoliceTerminal(), new PoliceTerminal(), new TruckPoliceTerminal()));
+        createAndShowGUI(vehicles,terminals);
+        for(Vehicle veh:vehicles){
+            veh.start();
+        }
+        for(Terminal ter:terminals){
+            ter.start();
+        }
         while(true){
             frame.updateComponents();
             if(vehicles.isEmpty())break;
