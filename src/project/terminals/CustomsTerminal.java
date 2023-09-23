@@ -4,7 +4,9 @@ import src.project.vehicles.Vehicle;
 import src.project.vehicles.Truck;
 
 public class CustomsTerminal extends Terminal{
-    protected String type="customs";
+    public CustomsTerminal(){
+        type="customs";
+    }
     public Boolean checkType(Vehicle veh){
         return false;
     }

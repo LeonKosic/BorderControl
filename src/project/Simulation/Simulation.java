@@ -17,6 +17,7 @@ import src.project.vehicles.Vehicle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 public class Simulation extends Thread {
     private static Logger log;
     private static GridLayoutApp frame;
@@ -39,8 +40,10 @@ public class Simulation extends Thread {
     @Override
     public void run(){
         List<Vehicle> vehicles=VehicleGenerator.generate();
+        Vehicle.setList(vehicles);
         List<Terminal> terminals = Collections.synchronizedList(new ArrayList<>());
         terminals.addAll(List.of(new CustomsTerminal(),new TruckCustomsTerminal(),new PoliceTerminal(), new PoliceTerminal(), new TruckPoliceTerminal()));
+        Vehicle.terminals=terminals;
         createAndShowGUI(vehicles,terminals);
         for(Vehicle veh:vehicles){
             veh.start();
@@ -50,7 +53,8 @@ public class Simulation extends Thread {
         }
         while(true){
             frame.updateComponents();
-            if(vehicles.isEmpty())break;
+            if(vehicles.stream().noneMatch(Objects::nonNull))break;
+           // System.out.println("a");
             try{
                 Thread.sleep(100);
             }catch(InterruptedException e){

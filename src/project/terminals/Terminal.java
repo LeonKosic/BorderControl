@@ -34,7 +34,18 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
         return false;
     }
     public void handle(){
-        
+        if(true){ //TODO
+            current.notifyDeniedPassage();
+        }else if(type=="police"){
+            current.notifyPassedPolice();
+        }else if(type =="customs"){
+            current.notifyPassedCustoms();
+        }
+        try{
+            Thread.sleep(100);
+        }catch(InterruptedException e){
+            log.warning(e.getMessage());
+        }
     }
     public synchronized void clearTerminal(){
         this.current=null;
