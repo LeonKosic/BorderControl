@@ -11,10 +11,12 @@ import src.project.vehicles.Vehicle;
 
 
 public abstract class Terminal extends Thread implements TerminalInterface,Serializable {
+    private static Logger log;
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+"logs"+File.separator+"log"+System.nanoTime()+"terminal.log";
-            Logger.getLogger(Terminal.class.getName()).addHandler(new FileHandler(path));
+            log= Logger.getLogger(Terminal.class.getName());
+            log.addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -44,6 +46,11 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
             if(current!=null){
                 handle();
                 clearTerminal();
+            }
+            try{
+                Thread.sleep(100);
+            }catch(InterruptedException e){
+                log.warning(e.getMessage());
             }
         }
     }

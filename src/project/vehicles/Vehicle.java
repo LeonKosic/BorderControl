@@ -11,10 +11,12 @@ import src.project.passengers.items.Doc;
 import src.project.passengers.Passenger;
 import src.project.terminals.TerminalInterface;
 public abstract class Vehicle extends Thread implements Serializable {
+    private static Logger log;
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"vehicle.log";
-            Logger.getLogger(Vehicle.class.getName()).addHandler(new FileHandler(path));
+            log=Logger.getLogger(Vehicle.class.getName());
+            log.addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -24,11 +26,19 @@ public abstract class Vehicle extends Thread implements Serializable {
     public Integer position=-2;
     protected Integer maxCapacity=3;
     protected String name;
+    private Boolean passedPolice=false;
+    private Boolean passedCustoms=false;
     public static List<TerminalInterface> terminals=Collections.synchronizedList(new ArrayList<>());
     protected List<Passenger> passengers = Collections.synchronizedList(new ArrayList<>());
     public Vehicle(List<Passenger> pass, String name){
         this.name=name;
         this.passengers=pass;
+    }
+    public void notifyPassedPolice(){
+        passedPolice=true;
+    }
+    public void notifyPassedCustoms(){
+        passedCustoms=true;
     }
     public static void setList(List<Vehicle> l){
         queue = l;
@@ -56,15 +66,17 @@ public abstract class Vehicle extends Thread implements Serializable {
                     queue.set(position-1,this);
                     queue.set(position,null);
                 }
-            }else if(position >= -1){
+            }else if(position == 0||(position==-1&&passedPolice)){
                 Integer freeTerminal=(position==0)?checkTerminals("police"):checkTerminals("customs");
                 if(freeTerminal>=0){
-                    //TODO
+                    position-=1;
                 }
-            }else{
-                break;
             }
-                
+            try{
+                Thread.sleep(100);
+            }catch(InterruptedException e){
+                log.warning(e.getMessage());
+            }
         }
         
     }
