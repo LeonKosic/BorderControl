@@ -1,5 +1,7 @@
 package src.project.gui;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -8,6 +10,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import src.project.Simulation.SimulationLog;
 import src.project.terminals.Terminal;
 import src.project.vehicles.Bus;
 import src.project.vehicles.Car;
@@ -19,20 +23,29 @@ public class GridLayoutApp extends JFrame{
     public List<Terminal> terminals;
     private final List<JButton> termButtons=Collections.synchronizedList(new ArrayList<JButton>());
     private final List<JButton> firstVehs=Collections.synchronizedList(new ArrayList<JButton>());
+    JTextPane textPane= new JTextPane();
     JButton pause = new JButton("Pause");
     JButton others= new JButton("Others");
-    JButton finished = new JButton("Finished");
-    JButton issues = new JButton ("Issues");
+    JButton passIssues = new JButton("Passenger Issues");
+    JButton vehicleIssues = new JButton ("Vehicle Issues");
     public GridLayoutApp(String name, List<Vehicle> veh, List<Terminal> ter){
        super(name);
        vehicles=veh;
        terminals=ter;
+    }
+    public JFrame generateVehicleModal(Vehicle veh){
+        JFrame modal=new JFrame();
+        modal.setSize(500,500);
+        modal.add(new JLabel(veh.getName()));
+        modal.add(new JLabel(veh.getPassengers().toString()));
+        return modal;
     }
     public void setMainLayoutGap(int x){
         mainLayout.setHgap(x);
         mainLayout.setVgap(x);
     }
     public void updateComponents(){
+        textPane.setText(SimulationLog.getInstance().getMessages());
         for(int i=0;i<5;i++){
             Vehicle ter=terminals.get(i).getCurrent();
             JButton butt=termButtons.get(i);
@@ -43,7 +56,7 @@ public class GridLayoutApp extends JFrame{
             }
         }
         for(int i=0;i<5;i++){
-            Vehicle veh=vehicles.get(i);
+            final Vehicle veh=vehicles.get(i);
             JButton butt=firstVehs.get(i);
             if(veh instanceof Car){
                 butt.setBackground(Color.red);
@@ -58,9 +71,16 @@ public class GridLayoutApp extends JFrame{
                 butt.setBackground(Color.gray);
                 butt.setText("X");
             }
-            firstVehs.get(i).addActionListener(e->{
-                System.out.println(veh.getName());
-            });
+            ActionListener al[]=firstVehs.get(i).getActionListeners();
+            for (ActionListener actionListener : al) {
+                firstVehs.get(i).removeActionListener(actionListener);
+            }
+            if(veh instanceof Car||veh instanceof Truck||veh instanceof Bus){
+                firstVehs.get(i).addActionListener(e->{
+                    generateVehicleModal(veh).setVisible(true);
+                });
+            }
+           
         }
     }
     public void addComponentsMain(final Container pane){
@@ -73,8 +93,8 @@ public class GridLayoutApp extends JFrame{
         termButtons.add(new JButton("P1"));
         termButtons.add(new JButton("P2"));
         termButtons.add(new JButton("PK"));
-        panel.setPreferredSize(new Dimension((int)(buttonSize.getWidth() * 2.5)+20,
-                (int)(buttonSize.getHeight() * 3.5)+20 * 2));
+        Dimension dim= new Dimension((int)(buttonSize.getWidth() * 2.5)+20, (int)(buttonSize.getHeight() * 3.5)+20 * 2);
+        panel.setPreferredSize(dim);
         for(int i=0;i<5;i++){
             panel.add(termButtons.get(i));
             if(i==0){
@@ -88,12 +108,16 @@ public class GridLayoutApp extends JFrame{
             panel.add(firstVehs.get(i));
             panel.add(new JLabel(""));
         }
+        JPanel textArea = new JPanel(new GridLayout(0,1));
+        textArea.setPreferredSize(new Dimension(300, 500));
+        textArea.add(textPane);
         options.add(pause);
         options.add(others);
-        options.add(finished);
-        options.add(issues);
+        options.add(passIssues);
+        options.add(vehicleIssues);
        
         pane.add(panel,BorderLayout.NORTH);
+        pane.add(textArea,BorderLayout.CENTER);
         pane.add(options,BorderLayout.SOUTH);
     }
 }

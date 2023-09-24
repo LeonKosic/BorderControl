@@ -26,7 +26,7 @@ public class TruckCustomsTerminal extends CustomsTerminal{
     @Override
     protected Boolean specialCheck(){
         try{
-            Thread.sleep(1500);
+            Thread.sleep(500);
         }catch(InterruptedException e){
             log.warning(e.getMessage());
         }

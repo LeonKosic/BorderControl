@@ -49,9 +49,11 @@ public class TerminalFileWatcher extends Thread{
         file=new File(path+File.separator+filename);
         this.path=path;
         if(file.createNewFile()){
-            SimulationLog.getInstance().addMessage("New terminal file created");
+            //SimulationLog.getInstance().addMessage("New terminal file created");
+            System.out.println("New terminal file created");
         }else{
-            SimulationLog.getInstance().addMessage("Terminal file already exists");
+            //SimulationLog.getInstance().addMessage("Terminal file already exists");
+            System.out.println("Terminal file already exists");
         }
     }
     @Override
@@ -78,7 +80,7 @@ public class TerminalFileWatcher extends Thread{
                 }
                 wkey.reset();
             }catch(Exception e){
-                System.out.println("AAA");
+               // System.out.println("AAA");
                 log.warning(e.getMessage());
             }
         }
