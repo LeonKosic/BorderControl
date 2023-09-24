@@ -13,7 +13,7 @@ public class TruckCustomsTerminal extends CustomsTerminal{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"TruckCustoms.log";
             log= Logger.getLogger(Terminal.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -34,7 +34,7 @@ public class TruckCustomsTerminal extends CustomsTerminal{
         if(truck.needDoc){
             truck.generateDocumentation();
             if(truck.declaredWeight<truck.realWeight){
-                SimulationLog.getInstance().addMessage("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
+                SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
                 return false;
             }
         }

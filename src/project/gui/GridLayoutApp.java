@@ -133,6 +133,14 @@ public class GridLayoutApp extends JFrame{
         JPanel textArea = new JPanel(new GridLayout(0,1));
         textArea.setPreferredSize(new Dimension(300, 500));
         textArea.add(textPane);
+        this.pause.addActionListener(e->{
+            if(Simulation.paused){
+                pauseTime+=(System.nanoTime()-currentPause);
+            }else{
+                currentPause=System.nanoTime();
+            }
+            Simulation.paused=!Simulation.paused;
+        });
         options.add(pause);
         options.add(others);
         options.add(passIssues);

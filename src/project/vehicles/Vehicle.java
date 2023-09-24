@@ -15,7 +15,7 @@ public abstract class Vehicle extends Thread implements Serializable {
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Vehicle.log";
             log=Logger.getLogger(Vehicle.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -78,7 +78,8 @@ public abstract class Vehicle extends Thread implements Serializable {
     public static int numPassed=0;
     public void run(){
         while(Simulation.simulationRunning){
-            if(deniedPassage){
+            if(Simulation.paused){
+            }else if(deniedPassage){
                 position=-3;
                 break;
             }else if(position >0){

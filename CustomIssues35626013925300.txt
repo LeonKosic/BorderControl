@@ -1,0 +1,2 @@
+Truck Truck6449-Z is heavier than declared, Vehicle stopped
+Truck Truck35-Z5408 is heavier than declared, Vehicle stopped

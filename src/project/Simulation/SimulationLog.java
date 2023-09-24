@@ -7,8 +7,10 @@ import src.project.passengers.Passenger;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class SimulationLog {
@@ -16,17 +18,12 @@ public class SimulationLog {
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Simlog.log";
             log=Logger.getLogger(SimulationLog.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-    private enum type{
-        VEHICLE_DENIED,
-        PASSENGER_DENIED,
-        INFO
     }
     private File policeIssues=new File("PoliceIssues"+System.nanoTime()+".data");
     private File customsIssues=new File("CustomIssues"+System.nanoTime()+".txt");
@@ -58,20 +55,24 @@ public class SimulationLog {
             bw.write(mess);
             bw.newLine();
             bw.close();
+            fw.close();
         }catch(IOException e){
             log.warning(e.getMessage());
-            System.out.println(e.getMessage());
+        }
+        addMessage(mess);
+    }
+    public void policeStopped(Passenger pass){
+        try{
+            FileOutputStream f = new FileOutputStream(policeIssues,true);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(pass);
+            o.close();
+            f.close();
+        }catch(Exception e){
+            log.warning(e.getMessage());
         }
     }
-    public void policeStopped(String mess,Passenger pass){
-        System.out.println("AAA");
-        
-    }
     public void addMessage(String mess){
-        addMessage(type.INFO,mess);
-    }
-    public void addMessage(type a,String mess){
         messages.add(mess);
-       // System.out.println(mess);
     }
 }

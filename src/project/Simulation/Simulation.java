@@ -25,11 +25,11 @@ public class Simulation extends Thread {
     private static Simulation single=null;
     public static Boolean simulationRunning=true;
     public static Long startTime=System.nanoTime();
-    public static Boolean paused=true;
+    public static Boolean paused=false;
     private GridLayoutApp frame;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Simulation.log";
             log= Logger.getLogger(Id.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -69,7 +69,7 @@ public class Simulation extends Thread {
             ter.start();
         }
         while(simulationRunning){
-            frame.updateComponents();
+            if(!paused)frame.updateComponents();
             if(terminals.stream().noneMatch(o->Objects.nonNull(o.getVehicle()))&&vehicles.stream().noneMatch(Objects::nonNull)){
                 simulationRunning=false;
             }

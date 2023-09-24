@@ -15,7 +15,7 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Terminal.log";
             log= Logger.getLogger(Terminal.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -54,8 +54,7 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
     @Override
     public void run(){
         while(Simulation.simulationRunning){
-            Thread.yield();
-            if(current!=null){
+            if((!Simulation.paused)&&current!=null){
                 handle();
                 clearTerminal();
             }

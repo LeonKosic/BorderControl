@@ -25,7 +25,7 @@ public class TerminalFileWatcher extends Thread{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"terFileWatch.log";
             log=Logger.getLogger(TerminalFileWatcher.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -47,13 +47,7 @@ public class TerminalFileWatcher extends Thread{
     public void createTerminalFile(String path,String filename) throws IOException{
         file=new File(path+File.separator+filename);
         this.path=path;
-        if(file.createNewFile()){
-            //SimulationLog.getInstance().addMessage("New terminal file created");
-            System.out.println("New terminal file created");
-        }else{
-            //SimulationLog.getInstance().addMessage("Terminal file already exists");
-            System.out.println("Terminal file already exists");
-        }
+        file.createNewFile();
     }
     @Override
     public void run(){
