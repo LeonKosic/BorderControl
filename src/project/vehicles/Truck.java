@@ -12,16 +12,15 @@ public class Truck extends Vehicle {
     private final static java.util.Random rand = new java.util.Random();
     public Truck(List<Passenger> pass, String name){
         super(pass,name);
+        doc=new Doc();
         declaredWeight=rand.nextInt(1500)+2000;
         realWeight=(int)((Math.random()<=0.2)?declaredWeight*(1+Math.random()*.3):declaredWeight*(Math.random()*.3+.7));
         if(Math.random()<=0.5){
             needDoc=true;
         }
     }
-    public synchronized void generateDocumentation(){
-        doc = new Doc();
-    }
-    public Doc getDocumentation(){
+    public Doc generateDocumentation(){
         return doc;
     }
+    
 }

@@ -5,7 +5,10 @@ import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import javax.swing.text.Document;
+
 import src.project.Simulation.SimulationLog;
+import src.project.passengers.items.Doc;
 import src.project.vehicles.Truck;
 import src.project.vehicles.Vehicle;
 
@@ -31,12 +34,14 @@ public class TruckCustomsTerminal extends CustomsTerminal{
             log.warning(e.getMessage());
         }
         Truck truck = (Truck) current;
-        if(truck.needDoc)
-            truck.generateDocumentation();
-        if(truck.declaredWeight<truck.realWeight){
-            SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
-            return false;
+        if(truck.needDoc){
+            Doc doc=truck.generateDocumentation();
+            if(truck.declaredWeight<truck.realWeight){
+                SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
+                return false;
+            }
         }
+        
         return true;
     }
 }

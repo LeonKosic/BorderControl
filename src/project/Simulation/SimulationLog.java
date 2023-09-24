@@ -21,6 +21,8 @@ import java.util.ArrayList;
 public class SimulationLog {
     private List<String> messages;
     private Integer countObjects=0;
+    private Integer readObjects=0;
+    private String resPol="";
     private static Logger log;
     static {
         try {
@@ -41,14 +43,18 @@ public class SimulationLog {
     private SimulationLog(){
         messages=new ArrayList<>();
         countObjects=0;
+        resPol="";
+        readObjects=0;
         try{
             policeIssues.createNewFile();
             customsIssues.createNewFile();
             fileIn = new FileInputStream(policeIssues);
-            objIn = new ObjectInputStream(fileIn);
             f = new FileOutputStream(policeIssues,true);
             o = new ObjectOutputStream(f);
+            System.out.println("AAAAAAAAA");
+            objIn = new ObjectInputStream(fileIn);
         }catch(IOException e){
+            System.out.println(e.getMessage());
             log.warning(e.getMessage());
         }
     }
@@ -83,33 +89,32 @@ public class SimulationLog {
         }
     }
     public String getCustomsReport(){
+        String res="";
         try{
             FileReader fr=new FileReader(customsIssues);
             BufferedReader br=new BufferedReader(fr);
-            return br.lines().collect(Collectors.joining(System.lineSeparator()));
+            res= br.lines().collect(Collectors.joining(System.lineSeparator()));
+            br.close();fr.close();
         }catch(Exception e){
             log.warning(e.getMessage());
         }
-        return "";
+        return res;
     }
     public String getPoliceReport(){
-        String s="";
-        if(countObjects==0)return s;
         try{
-            for(Integer i=0;i<countObjects;i++){
-                s+=(Passenger)objIn.readObject()+System.lineSeparator();
+            for(;readObjects<countObjects;readObjects++){
+                resPol+=(Passenger)objIn.readObject()+System.lineSeparator();
             }
-            objIn.reset();
         }catch(Exception e){
             log.warning(e.getMessage());
         }
-        return s;
+        return resPol;
     }
     public void close(){
         try{
             objIn.close();
             fileIn.close();
-            o.close();
+            o.close(); 
             f.close();
         }catch(IOException e){
             log.warning(e.getMessage());
