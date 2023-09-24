@@ -15,7 +15,7 @@ public class CustomsTerminal extends Terminal{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Customs.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Customs"+System.nanoTime()+".log";
             log= Logger.getLogger(Terminal.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -31,7 +31,7 @@ public class CustomsTerminal extends Terminal{
             for (Passenger passenger : passengers) {
                 if(!passenger.checkCargo()){
                     
-                    SimulationLog.getInstance().addMessage("Passenger "+passenger.getName()+" has illegal cargo");
+                    SimulationLog.getInstance().CustomsStopped("Passenger "+passenger.getName()+" has illegal cargo");
                     if(passenger==passengers.get(0)){ //ako je prvi putnik, tj vozac
                         SimulationLog.getInstance().CustomsStopped("Driver has illegal cargo, vehicle "+current.getName()+" stopped.");
                         return false;

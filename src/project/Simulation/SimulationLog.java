@@ -2,41 +2,54 @@ package src.project.Simulation;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import src.project.passengers.Passenger;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class SimulationLog {
     private List<String> messages;
+    private Integer countObjects=0;
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Simlog.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Simlog"+System.nanoTime()+".log";
             log=Logger.getLogger(SimulationLog.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+    FileInputStream fileIn ;
+    FileOutputStream f;
+    ObjectOutputStream o;
+    ObjectInputStream objIn ;
     private File policeIssues=new File("PoliceIssues"+System.nanoTime()+".data");
     private File customsIssues=new File("CustomIssues"+System.nanoTime()+".txt");
     private static SimulationLog single=null;
     private SimulationLog(){
         messages=new ArrayList<>();
+        countObjects=0;
         try{
             policeIssues.createNewFile();
-        }catch(IOException e){
-        } 
-        try{
             customsIssues.createNewFile();
+            fileIn = new FileInputStream(policeIssues);
+            objIn = new ObjectInputStream(fileIn);
+            f = new FileOutputStream(policeIssues,true);
+            o = new ObjectOutputStream(f);
         }catch(IOException e){
+            log.warning(e.getMessage());
         }
     }
     public String getMessages(){
@@ -63,12 +76,42 @@ public class SimulationLog {
     }
     public void policeStopped(Passenger pass){
         try{
-            FileOutputStream f = new FileOutputStream(policeIssues,true);
-            ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(pass);
+            countObjects++;
+        }catch(Exception e){
+            log.warning(e.getMessage());
+        }
+    }
+    public String getCustomsReport(){
+        try{
+            FileReader fr=new FileReader(customsIssues);
+            BufferedReader br=new BufferedReader(fr);
+            return br.lines().collect(Collectors.joining(System.lineSeparator()));
+        }catch(Exception e){
+            log.warning(e.getMessage());
+        }
+        return "";
+    }
+    public String getPoliceReport(){
+        String s="";
+        if(countObjects==0)return s;
+        try{
+            for(Integer i=0;i<countObjects;i++){
+                s+=(Passenger)objIn.readObject()+System.lineSeparator();
+            }
+            objIn.reset();
+        }catch(Exception e){
+            log.warning(e.getMessage());
+        }
+        return s;
+    }
+    public void close(){
+        try{
+            objIn.close();
+            fileIn.close();
             o.close();
             f.close();
-        }catch(Exception e){
+        }catch(IOException e){
             log.warning(e.getMessage());
         }
     }

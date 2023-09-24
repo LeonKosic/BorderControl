@@ -7,7 +7,7 @@ public class Truck extends Vehicle {
     public Integer declaredWeight;
     public Integer realWeight;
     public Boolean needDoc=false;
-    public Doc doc;
+    private Doc doc=null;
     public static Integer maxCapacity=3;
     private final static java.util.Random rand = new java.util.Random();
     public Truck(List<Passenger> pass, String name){
@@ -18,7 +18,10 @@ public class Truck extends Vehicle {
             needDoc=true;
         }
     }
-    public void generateDocumentation(){
+    public synchronized void generateDocumentation(){
         doc = new Doc();
+    }
+    public Doc getDocumentation(){
+        return doc;
     }
 }

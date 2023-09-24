@@ -25,7 +25,7 @@ public class TerminalFileWatcher extends Thread{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"terFileWatch.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"terFileWatch"+System.nanoTime()+".log";
             log=Logger.getLogger(TerminalFileWatcher.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){

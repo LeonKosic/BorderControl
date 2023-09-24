@@ -15,7 +15,7 @@ public abstract class Vehicle extends Thread implements Serializable {
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Vehicle.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"Vehicle"+System.nanoTime()+".log";
             log=Logger.getLogger(Vehicle.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){

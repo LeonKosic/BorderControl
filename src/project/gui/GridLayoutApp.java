@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import src.project.Simulation.Simulation;
 import src.project.Simulation.SimulationLog;
@@ -36,8 +38,8 @@ public class GridLayoutApp extends JFrame{
     JFrame customsFrame=new JFrame();
     JButton pause = new JButton("Pause");
     JButton others= new JButton("Others");
-    JButton passIssues = new JButton("Passenger Issues");
-    JButton vehicleIssues = new JButton ("Vehicle Issues");
+    JButton passIssues = new JButton("Police Terminal Issues");
+    JButton vehicleIssues = new JButton ("Customs Terminal Issues");
     
     public GridLayoutApp(String name, List<Vehicle> veh, List<Terminal> ter){
        super(name);
@@ -77,9 +79,6 @@ public class GridLayoutApp extends JFrame{
         for(int i=0;i<5;i++){
             final Vehicle veh=vehicles.get(i);
             JButton butt=firstVehs.get(i);
-            otherCarsFrame.add(otherCarsPane);
-            policeFrame.add(policeStopped);
-            customsFrame.add(customsStopped);
             if(veh instanceof Car){
                 butt.setBackground(Color.red);
                 butt.setText("V");
@@ -102,8 +101,10 @@ public class GridLayoutApp extends JFrame{
                     generateVehicleModal(veh).setVisible(true);
                 });
             }
-           
         }
+        otherCarsPane.setText(vehicles.subList(5, vehicles.size()).stream().filter(e->Objects.nonNull(e)).map(e->e.getName()).collect(Collectors.joining(System.getProperty("line.separator"))));
+        policeStopped.setText(SimulationLog.getInstance().getPoliceReport());;
+        customsStopped.setText(SimulationLog.getInstance().getCustomsReport());
     }
     public void addComponentsMain(final Container pane){
         JPanel panel=new JPanel(mainLayout);
@@ -115,8 +116,7 @@ public class GridLayoutApp extends JFrame{
         termButtons.add(new JButton("P1"));
         termButtons.add(new JButton("P2"));
         termButtons.add(new JButton("PK"));
-        Dimension dim= new Dimension((int)(buttonSize.getWidth() * 2.5)+20, (int)(buttonSize.getHeight() * 3.5)+20 * 2);
-        panel.setPreferredSize(dim);
+        panel.setPreferredSize(new Dimension((int)(buttonSize.getWidth() * 2.5)+20, (int)(buttonSize.getHeight() * 3.5)+20 * 2));
         for(int i=0;i<5;i++){
             panel.add(termButtons.get(i));
             if(i==0){
@@ -131,7 +131,8 @@ public class GridLayoutApp extends JFrame{
             panel.add(new JLabel(""));
         }
         JPanel textArea = new JPanel(new GridLayout(0,1));
-        textArea.setPreferredSize(new Dimension(300, 500));
+        Dimension dim= new Dimension(300,500);
+        textArea.setPreferredSize(dim);
         textArea.add(textPane);
         this.pause.addActionListener(e->{
             if(Simulation.paused){
@@ -141,11 +142,25 @@ public class GridLayoutApp extends JFrame{
             }
             Simulation.paused=!Simulation.paused;
         });
+        this.passIssues.addActionListener(e->{
+            policeFrame.setVisible(true);
+        });
+        this.vehicleIssues.addActionListener(e->{
+            customsFrame.setVisible(true);
+        });
+        this.others.addActionListener(e->{
+            otherCarsFrame.setVisible(true);
+        });
+        otherCarsFrame.add(otherCarsPane);
+        policeFrame.add(policeStopped);
+        customsFrame.add(customsStopped);
+        otherCarsFrame.setSize(dim);
+        policeFrame.setSize(dim);
+        customsFrame.setSize(dim);
         options.add(pause);
         options.add(others);
         options.add(passIssues);
         options.add(vehicleIssues);
-       
         pane.add(panel,BorderLayout.NORTH);
         pane.add(textArea,BorderLayout.CENTER);
         pane.add(options,BorderLayout.SOUTH);
