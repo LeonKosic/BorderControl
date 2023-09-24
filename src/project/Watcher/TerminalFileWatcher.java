@@ -7,19 +7,23 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
-import src.project.terminals.TerminalInterface;
+
+import src.project.Simulation.Simulation;
+import src.project.Simulation.SimulationLog;
+import src.project.terminals.Terminal;
 
 public class TerminalFileWatcher extends Thread{
-    private List<TerminalInterface> terminals;
+    private List<Terminal> terminals;
     public WatchService watch;
+    private String path;
     private File file;
     private static Logger log;
-    boolean isRunning=true;
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"vehicle.log";
@@ -29,33 +33,35 @@ public class TerminalFileWatcher extends Thread{
             e.printStackTrace();
         }
     }
-    public TerminalFileWatcher(List<TerminalInterface> terminals){
+    public TerminalFileWatcher(List<Terminal> terminals){
         this.terminals=terminals;
         try{
+            watch = FileSystems.getDefault().newWatchService();
             createTerminalFile();
         }catch(IOException e){
             log.warning(e.getMessage());
         }
     }
     public void createTerminalFile() throws IOException{
-        createTerminalFile(System.getProperty("user.dir")+File.separator+"pause"+ File.separator, "pausedTerminals.txt");
+        createTerminalFile(System.getProperty("user.dir")+File.separator+"pause", "pausedTerminals.txt");
     }
     public void createTerminalFile(String path,String filename) throws IOException{
         file=new File(path+File.separator+filename);
+        this.path=path;
         if(file.createNewFile()){
-            log.info("New terminal file created");
+            SimulationLog.getInstance().addMessage("New terminal file created");
         }else{
-            log.info("Terminal file already exists");
+            SimulationLog.getInstance().addMessage("Terminal file already exists");
         }
     }
     @Override
     public void run(){
         try{
-            Paths.get(file.getAbsolutePath()).register(watch,StandardWatchEventKinds.ENTRY_MODIFY);   
+            Paths.get(path).register(watch,StandardWatchEventKinds.ENTRY_MODIFY);   
         }catch(IOException e){
             log.warning(e.getMessage());
         }
-        while(isRunning){
+        while(Simulation.simulationRunning){
             try{   
                 WatchKey wkey=this.watch.take();
                 for(WatchEvent<?> we: wkey.pollEvents()){
@@ -70,7 +76,9 @@ public class TerminalFileWatcher extends Thread{
                         }
                     }
                 }
+                wkey.reset();
             }catch(Exception e){
+                System.out.println("AAA");
                 log.warning(e.getMessage());
             }
         }

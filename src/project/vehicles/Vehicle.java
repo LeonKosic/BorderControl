@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import src.project.passengers.items.Doc;
+import src.project.Simulation.Simulation;
 import src.project.passengers.Passenger;
 import src.project.terminals.Terminal;
 public abstract class Vehicle extends Thread implements Serializable {
@@ -25,13 +26,12 @@ public abstract class Vehicle extends Thread implements Serializable {
     public static List<Vehicle> queue;
     public Integer position;
     protected Integer maxCapacity=3;
-    protected String name;
     private Boolean passedCustoms=false;
     private Boolean deniedPassage=false;
     public static List<Terminal> terminals=Collections.synchronizedList(new ArrayList<>());
     protected List<Passenger> passengers = Collections.synchronizedList(new ArrayList<>());
     public Vehicle(List<Passenger> pass, String name){
-        this.name=name;
+        super(name);
         this.passengers=pass;
     }
     public List<Passenger> getPassengers(){
@@ -64,6 +64,7 @@ public abstract class Vehicle extends Thread implements Serializable {
             i+=1;
         }
     }
+    
     public Integer checkTerminals(String type){
         Integer i=0;
         for(Terminal el:terminals){
@@ -76,7 +77,7 @@ public abstract class Vehicle extends Thread implements Serializable {
     }
     public static int numPassed=0;
     public void run(){
-        while(true){
+        while(Simulation.simulationRunning){
             if(deniedPassage){
                 position=-3;
                 break;

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+
+import src.project.Watcher.TerminalFileWatcher;
 import src.project.generators.VehicleGenerator;
 import src.project.gui.GridLayoutApp;
 import src.project.passengers.items.Id;
@@ -21,6 +23,7 @@ import java.util.Objects;
 public class Simulation extends Thread {
     private static Logger log;
     private static Simulation single=null;
+    public static Boolean simulationRunning=true;;
     private GridLayoutApp frame;
     static {
         try {
@@ -31,7 +34,9 @@ public class Simulation extends Thread {
             e.printStackTrace();
         }
     }
-    private Simulation(){}
+    private Simulation(){
+        simulationRunning=true;
+    }
     public static synchronized Simulation getInstance(){
         if(single==null){
             single = new Simulation();
@@ -51,6 +56,8 @@ public class Simulation extends Thread {
         Vehicle.setList(vehicles);
         List<Terminal> terminals = Collections.synchronizedList(new ArrayList<>());
         terminals.addAll(List.of(new CustomsTerminal(),new TruckCustomsTerminal(),new PoliceTerminal(), new PoliceTerminal(), new TruckPoliceTerminal()));
+        TerminalFileWatcher tfw= new TerminalFileWatcher(terminals);
+        tfw.start();    
         Vehicle.terminals=terminals;
         createAndShowGUI(vehicles,terminals);
         for(Vehicle veh:vehicles){
@@ -59,14 +66,17 @@ public class Simulation extends Thread {
         for(Terminal ter:terminals){
             ter.start();
         }
-        while(true){
+        while(simulationRunning){
             frame.updateComponents();
-            if(vehicles.stream().noneMatch(Objects::nonNull))break;
+            if(terminals.stream().noneMatch(o->Objects.nonNull(o.getVehicle()))&&vehicles.stream().noneMatch(Objects::nonNull)){
+                simulationRunning=false;
+            }
             try{
                 Thread.sleep(100);
             }catch(InterruptedException e){
                 log.warning(e.getMessage());
             }
         }
+        SimulationLog.getInstance().addMessage("Simulation finished");
     }
 }

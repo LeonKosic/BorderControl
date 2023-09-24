@@ -7,7 +7,7 @@ public class NameGenerator {
     private final static java.util.Random rand = new java.util.Random();
     private static Set<String> identifiers = new HashSet<String>();
     public  final static String generateName(){
-        final String lexicon="AABGDĐŽ ZIJKLMNOPR STĆUFHCČŠ";
+        final String lexicon="ABCDEF GHJIKLMNO PQRSTUV WXYZ";
         return generate(lexicon);
     }
     public  final static String generateReg(){
