@@ -10,7 +10,7 @@ public class Id implements Serializable {
     private Boolean valid=true;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"id.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             Logger.getLogger(Id.class.getName()).addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();

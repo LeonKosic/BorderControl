@@ -23,11 +23,13 @@ import java.util.Objects;
 public class Simulation extends Thread {
     private static Logger log;
     private static Simulation single=null;
-    public static Boolean simulationRunning=true;;
+    public static Boolean simulationRunning=true;
+    public static Long startTime=System.nanoTime();
+    public static Boolean paused=true;
     private GridLayoutApp frame;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"Simulation.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             log= Logger.getLogger(Id.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){

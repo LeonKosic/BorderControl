@@ -13,7 +13,7 @@ public class TruckCustomsTerminal extends CustomsTerminal{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+"logs"+File.separator+"log"+System.nanoTime()+"terminal.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             log= Logger.getLogger(Terminal.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){

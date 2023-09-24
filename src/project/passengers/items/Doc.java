@@ -6,11 +6,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 public class Doc implements Serializable {
-    public Doc(){
-    }
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"document.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             Logger.getLogger(Doc.class.getName()).addHandler(new FileHandler(path));
         }catch (Exception e){
             e.printStackTrace();

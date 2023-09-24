@@ -13,7 +13,7 @@ public class PoliceTerminal extends Terminal {
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+System.nanoTime()+File.separator+"log"+"terminal.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             log= Logger.getLogger(Terminal.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
@@ -29,13 +29,13 @@ public class PoliceTerminal extends Terminal {
         for (Passenger passenger : passengers) {
              try{
                 if(!passenger.checkId()){
+                    SimulationLog.getInstance().addMessage("Passenger "+passenger.getName()+" has an illegal ID");
                     if(passenger==passengers.get(0)){ //ako je prvi putnik, tj vozac
-                        SimulationLog.getInstance().addMessage("Driver "+passenger.getName()+" has illegal ID, vehicle "+current.getName()+" stopped.");
+                        SimulationLog.getInstance().addMessage("Driver has an illegal ID, vehicle "+current.getName()+" stopped.");
                         current.notifyDeniedPassage();
                         clearTerminal();
                         return;
                     }else{
-                        SimulationLog.getInstance().addMessage("Passenger "+passenger.getName()+" has illegal ID");
                         passenger=null;
                     }
                 }

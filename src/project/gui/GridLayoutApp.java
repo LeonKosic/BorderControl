@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import src.project.Simulation.Simulation;
 import src.project.Simulation.SimulationLog;
 import src.project.terminals.Terminal;
 import src.project.vehicles.Bus;
@@ -20,14 +21,24 @@ import src.project.vehicles.Vehicle;
 public class GridLayoutApp extends JFrame{
     GridLayout mainLayout = new GridLayout(0,3);
     public List<Vehicle> vehicles;
+    public Long pauseTime=0L;
+    public Long currentPause=0L;
+    JLabel timer= new JLabel();
     public List<Terminal> terminals;
     private final List<JButton> termButtons=Collections.synchronizedList(new ArrayList<JButton>());
     private final List<JButton> firstVehs=Collections.synchronizedList(new ArrayList<JButton>());
     JTextPane textPane= new JTextPane();
+    JTextPane otherCarsPane=new JTextPane();
+    JTextPane policeStopped=new JTextPane();
+    JTextPane customsStopped=new JTextPane();
+    JFrame otherCarsFrame=new JFrame();
+    JFrame policeFrame=new JFrame();
+    JFrame customsFrame=new JFrame();
     JButton pause = new JButton("Pause");
     JButton others= new JButton("Others");
     JButton passIssues = new JButton("Passenger Issues");
     JButton vehicleIssues = new JButton ("Vehicle Issues");
+    
     public GridLayoutApp(String name, List<Vehicle> veh, List<Terminal> ter){
        super(name);
        vehicles=veh;
@@ -45,19 +56,30 @@ public class GridLayoutApp extends JFrame{
         mainLayout.setVgap(x);
     }
     public void updateComponents(){
+        timer.setText(""+((System.nanoTime()-Simulation.startTime-pauseTime)/10e8));
         textPane.setText(SimulationLog.getInstance().getMessages());
         for(int i=0;i<5;i++){
             Vehicle ter=terminals.get(i).getCurrent();
             JButton butt=termButtons.get(i);
+            ActionListener al[]=butt.getActionListeners();
+            for (ActionListener actionListener : al) {
+               butt.removeActionListener(actionListener);
+            }
             if(ter==null){
                 butt.setBackground(Color.darkGray);
             }else{
+                butt.addActionListener(e->{
+                    generateVehicleModal(ter).setVisible(true);;
+                });
                 butt.setBackground(Color.orange);
             }
         }
         for(int i=0;i<5;i++){
             final Vehicle veh=vehicles.get(i);
             JButton butt=firstVehs.get(i);
+            otherCarsFrame.add(otherCarsPane);
+            policeFrame.add(policeStopped);
+            customsFrame.add(customsStopped);
             if(veh instanceof Car){
                 butt.setBackground(Color.red);
                 butt.setText("V");
@@ -98,7 +120,7 @@ public class GridLayoutApp extends JFrame{
         for(int i=0;i<5;i++){
             panel.add(termButtons.get(i));
             if(i==0){
-                panel.add(new JLabel(""));
+                panel.add(timer);
             }
         }
        setMainLayoutGap(5);

@@ -1,14 +1,28 @@
 package src.project.Simulation;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 import src.project.passengers.Passenger;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class SimulationLog {
     private List<String> messages;
+    private static Logger log;
+    static {
+        try {
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
+            log=Logger.getLogger(SimulationLog.class.getName());
+            log.addHandler(new FileHandler(path));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private enum type{
         VEHICLE_DENIED,
         PASSENGER_DENIED,
@@ -38,10 +52,19 @@ public class SimulationLog {
         return single;
     }
     public void CustomsStopped(String mess){
-        addMessage(type.VEHICLE_DENIED,mess);
+        try{
+            FileWriter fw = new FileWriter(customsIssues, true);
+            BufferedWriter bw=new BufferedWriter(fw);
+            bw.write(mess);
+            bw.newLine();
+            bw.close();
+        }catch(IOException e){
+            log.warning(e.getMessage());
+            System.out.println(e.getMessage());
+        }
     }
     public void policeStopped(String mess,Passenger pass){
-        addMessage(type.PASSENGER_DENIED,mess);
+        System.out.println("AAA");
         
     }
     public void addMessage(String mess){

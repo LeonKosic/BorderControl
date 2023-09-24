@@ -15,7 +15,6 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 
 import src.project.Simulation.Simulation;
-import src.project.Simulation.SimulationLog;
 import src.project.terminals.Terminal;
 
 public class TerminalFileWatcher extends Thread{
@@ -26,7 +25,7 @@ public class TerminalFileWatcher extends Thread{
     private static Logger log;
     static {
         try {
-            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"vehicle.log";
+            String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log.log";
             log=Logger.getLogger(TerminalFileWatcher.class.getName());
             log.addHandler(new FileHandler(path));
         }catch (Exception e){
