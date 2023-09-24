@@ -4,11 +4,14 @@ import java.io.Serializable;
 import src.project.passengers.items.Id;
 public abstract class Person implements Serializable {
     public Id id;
-    public String name;
+    private String name;
     
     public Person(Id id,String name){
         this.id=id;
         this.name=name;
+    }
+    public String getName(){
+        return name;
     }
     @Override
     public boolean equals(Object o){

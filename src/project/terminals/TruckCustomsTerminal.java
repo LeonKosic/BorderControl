@@ -2,12 +2,10 @@ package src.project.terminals;
 
 
 import java.io.File;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import src.project.passengers.Passenger;
-import src.project.vehicles.Bus;
+import src.project.Simulation.SimulationLog;
 import src.project.vehicles.Truck;
 import src.project.vehicles.Vehicle;
 
@@ -35,7 +33,10 @@ public class TruckCustomsTerminal extends CustomsTerminal{
         Truck truck = (Truck) current;
         if(truck.needDoc){
             truck.generateDocumentation();
-            if(truck.declaredWeight>truck.realWeight)return false;
+            if(truck.declaredWeight<truck.realWeight){
+                SimulationLog.getInstance().addMessage("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
+                return false;
+            }
         }
         return true;
     }

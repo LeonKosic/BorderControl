@@ -51,7 +51,6 @@ public abstract class Vehicle extends Thread implements Serializable {
     }
     public void notifyPassedCustoms(){
         numPassed++;
-        System.out.println(numPassed);
         passedCustoms=true;
     }
     public void notifyDeniedPassage(){

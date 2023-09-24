@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import src.project.passengers.Passenger;
-import java.util.List;
 import src.project.vehicles.Bus;
 import src.project.vehicles.Car;
 import src.project.vehicles.Vehicle;
@@ -23,12 +21,20 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
         }
     }
     protected String type;
+    protected Boolean enabled=true;
     protected Vehicle current;
+    
+    public synchronized final void disableTerminal(){
+        enabled=false;
+    }
+    public synchronized final void enableTerminal(){
+        enabled=true;
+    }
     public Boolean checkType(Vehicle veh){
         return(veh instanceof Car || veh instanceof Bus);
     }
     public synchronized Boolean access(String type,Vehicle veh){
-        if(current==null&&type==this.type&&checkType(veh)){
+        if(current==null&&enabled&&type==this.type&&checkType(veh)){
             current=veh;
             return true;
         }

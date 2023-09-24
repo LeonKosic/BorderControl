@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Objects;
 public class Simulation extends Thread {
     private static Logger log;
-    private static GridLayoutApp frame;
+    private static Simulation single=null;
+    private GridLayoutApp frame;
     static {
         try {
             String path=System.getProperty("user.dir")+File.separator+"logs"+File.separator+"log"+System.nanoTime()+"Simulation.log";
@@ -30,7 +31,14 @@ public class Simulation extends Thread {
             e.printStackTrace();
         }
     }
-    private static void createAndShowGUI(List<Vehicle> veh,List<Terminal> ter) {
+    private Simulation(){}
+    public static synchronized Simulation getInstance(){
+        if(single==null){
+            single = new Simulation();
+        }
+        return single;
+    }
+    private void createAndShowGUI(List<Vehicle> veh,List<Terminal> ter) {
         frame = new GridLayoutApp("Border control",veh,ter);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addComponentsMain(frame.getContentPane());
@@ -54,7 +62,6 @@ public class Simulation extends Thread {
         while(true){
             frame.updateComponents();
             if(vehicles.stream().noneMatch(Objects::nonNull))break;
-           // System.out.println("a");
             try{
                 Thread.sleep(100);
             }catch(InterruptedException e){

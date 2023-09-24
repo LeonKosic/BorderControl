@@ -94,7 +94,6 @@ public class GridLayoutApp extends JFrame{
         options.add(issues);
        
         pane.add(panel,BorderLayout.NORTH);
-        pane.add(new JSeparator(),BorderLayout.CENTER);
         pane.add(options,BorderLayout.SOUTH);
     }
 }

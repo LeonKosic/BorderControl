@@ -1,6 +1,5 @@
 package src.project.terminals;
 
-import src.project.vehicles.Vehicle;
 
 
 import java.io.File;
@@ -8,9 +7,9 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+import src.project.Simulation.SimulationLog;
 import src.project.passengers.Passenger;
 import src.project.vehicles.Bus;
-import src.project.vehicles.Truck;
 
 public class CustomsTerminal extends Terminal{
     private static Logger log;
@@ -31,9 +30,12 @@ public class CustomsTerminal extends Terminal{
             List<Passenger> passengers=current.getPassengers();
             for (Passenger passenger : passengers) {
                 if(!passenger.checkCargo()){
-                     //TODO RECORD
-                     if(passenger==passengers.get(0)){ //ako je prvi putnik, tj vozac
+                    if(passenger==passengers.get(0)){ //ako je prvi putnik, tj vozac
+                        SimulationLog.getInstance().addMessage("Driver "+passenger.getName()+" has illegal cargo, vehicle "+current.getName()+" stopped.");
                         return false;
+                    }else{
+                        SimulationLog.getInstance().addMessage("Passenger "+passenger.getName()+" has illegal cargo");
+                        passenger=null;
                     }
                 }
                 try{
