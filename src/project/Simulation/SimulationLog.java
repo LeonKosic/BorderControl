@@ -51,7 +51,6 @@ public class SimulationLog {
             fileIn = new FileInputStream(policeIssues);
             f = new FileOutputStream(policeIssues,true);
             o = new ObjectOutputStream(f);
-            System.out.println("AAAAAAAAA");
             objIn = new ObjectInputStream(fileIn);
         }catch(IOException e){
             System.out.println(e.getMessage());

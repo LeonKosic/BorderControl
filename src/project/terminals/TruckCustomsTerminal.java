@@ -4,9 +4,6 @@ package src.project.terminals;
 import java.io.File;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
-import javax.swing.text.Document;
-
 import src.project.Simulation.SimulationLog;
 import src.project.passengers.items.Doc;
 import src.project.vehicles.Truck;
@@ -36,6 +33,7 @@ public class TruckCustomsTerminal extends CustomsTerminal{
         Truck truck = (Truck) current;
         if(truck.needDoc){
             Doc doc=truck.generateDocumentation();
+            if(doc!=null)SimulationLog.getInstance().addMessage("Generated truck documentation, "+current.getName());
             if(truck.declaredWeight<truck.realWeight){
                 SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
                 return false;
