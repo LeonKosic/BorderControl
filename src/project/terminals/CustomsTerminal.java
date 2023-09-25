@@ -22,7 +22,8 @@ public class CustomsTerminal extends Terminal{
             e.printStackTrace();
         }
     }
-    public CustomsTerminal(){
+    public CustomsTerminal(String name){
+        super(name);
         type="customs";
     }
     protected Boolean specialCheck(){
@@ -54,12 +55,16 @@ public class CustomsTerminal extends Terminal{
         }
         return true;
     }
-    public void handle(){
+    public void handle(){   
         
+        SimulationLog.getInstance().addMessage("Vehicle "+current.getName()+" arrived at customs terminal ");
         if(!specialCheck()){
             current.notifyDeniedPassage();
+            SimulationLog.getInstance().carBlocked(current.getName());
         }else{
+            SimulationLog.getInstance().addMessage("Vehicle "+current.getName()+" passed customs");
             current.notifyPassedCustoms();
+            SimulationLog.getInstance().carPassed(current.getName());
         }
         clearTerminal(); 
     }

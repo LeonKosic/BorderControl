@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class SimulationLog {
     private List<String> messages;
+    private List<String> carsBlocked;
+    private List<String> carsPassed;
     private Integer countObjects=0;
     private Integer readObjects=0;
     private String resPol="";
@@ -42,7 +44,9 @@ public class SimulationLog {
     private static SimulationLog single=null;
     private SimulationLog(){
         messages=new ArrayList<>();
-        countObjects=0;
+        carsBlocked=new ArrayList<>();
+        carsBlocked=new ArrayList<>();
+        carsPassed=new ArrayList<>();
         resPol="";
         readObjects=0;
         try{
@@ -57,8 +61,20 @@ public class SimulationLog {
             log.warning(e.getMessage());
         }
     }
+    public void carPassed(String veh){
+        carsPassed.add(veh);
+    }
+    public void carBlocked(String veh){
+        carsBlocked.add(veh);
+    }
     public String getMessages(){
         return String.join("\n",messages);
+    }
+    public String getBlocked(){
+        return String.join("\n", carsBlocked);
+    }
+    public String getPassed(){
+        return String.join("\n", carsPassed);
     }
     public static synchronized SimulationLog getInstance(){
         if(single==null){

@@ -1,7 +1,6 @@
 package src.project.gui;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -30,6 +29,8 @@ public class GridLayoutApp extends JFrame{
     private final List<JButton> termButtons=Collections.synchronizedList(new ArrayList<JButton>());
     private final List<JButton> firstVehs=Collections.synchronizedList(new ArrayList<JButton>());
     JTextPane textPane= new JTextPane();
+    JTextPane carsPassed=new JTextPane();
+    JTextPane carsBlocked=new JTextPane();
     JTextPane otherCarsPane=new JTextPane();
     JTextPane policeStopped=new JTextPane();
     JTextPane customsStopped=new JTextPane();
@@ -103,6 +104,8 @@ public class GridLayoutApp extends JFrame{
             }
         }
         otherCarsPane.setText(vehicles.subList(5, vehicles.size()).stream().filter(e->Objects.nonNull(e)).map(e->e.getName()).collect(Collectors.joining(System.getProperty("line.separator"))));
+        carsPassed.setText(SimulationLog.getInstance().getPassed());
+        carsBlocked.setText(SimulationLog.getInstance().getBlocked());
         policeStopped.setText(SimulationLog.getInstance().getPoliceReport());;
         customsStopped.setText(SimulationLog.getInstance().getCustomsReport());
     }
@@ -133,7 +136,13 @@ public class GridLayoutApp extends JFrame{
         JPanel textArea = new JPanel(new GridLayout(0,1));
         Dimension dim= new Dimension(300,500);
         textArea.setPreferredSize(dim);
-        textArea.add(textPane);
+        
+        JScrollPane pane1=new JScrollPane(textPane);
+        JScrollPane pane2=new JScrollPane(carsPassed);
+        JScrollPane pane3=new JScrollPane(carsBlocked);
+        
+        textArea.add(new JLabel("Info"));
+        textArea.add(pane1);
         this.pause.addActionListener(e->{
             if(Simulation.paused){
                 pauseTime+=(System.nanoTime()-currentPause);
@@ -151,6 +160,10 @@ public class GridLayoutApp extends JFrame{
         this.others.addActionListener(e->{
             otherCarsFrame.setVisible(true);
         });
+        textArea.add(new JLabel("Passed the border"));
+        textArea.add(pane2);
+        textArea.add(new JLabel("Didnt pass the border"));
+        textArea.add(pane3);
         otherCarsFrame.add(otherCarsPane);
         policeFrame.add(policeStopped);
         customsFrame.add(customsStopped);

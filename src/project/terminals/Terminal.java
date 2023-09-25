@@ -25,7 +25,9 @@ public abstract class Terminal extends Thread implements TerminalInterface,Seria
     protected String type;
     protected Boolean enabled=true;
     protected Vehicle current;
-    
+    public Terminal(String name){
+        super(name);
+    }
     public synchronized final void disableTerminal(){
         enabled=false;
     }

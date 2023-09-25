@@ -20,11 +20,13 @@ public class PoliceTerminal extends Terminal {
             e.printStackTrace();
         }
     }
-    public PoliceTerminal(){
+    public PoliceTerminal(String name){
+        super(name);
         type="police";
     }
     
     public void handle(){
+        SimulationLog.getInstance().addMessage("Vehicle "+current.getName()+" arrived at police terminal ");
         List<Passenger> passengers=current.getPassengers();
         for (Passenger passenger : passengers) {
              try{
@@ -34,6 +36,7 @@ public class PoliceTerminal extends Terminal {
                     if(passenger==passengers.get(0)){ //ako je prvi putnik, tj vozac
                         SimulationLog.getInstance().addMessage("Driver has an illegal ID, vehicle "+current.getName()+" stopped.");
                         current.notifyDeniedPassage();
+                        SimulationLog.getInstance().carBlocked(current.getName());
                         clearTerminal();
                         return;
                     }else{
@@ -46,6 +49,7 @@ public class PoliceTerminal extends Terminal {
             }
         }
         current.notifyPassedPolice();
+        SimulationLog.getInstance().addMessage("Vehicle "+current.getName()+" passed the police terminal");
         clearTerminal();
     }
 }

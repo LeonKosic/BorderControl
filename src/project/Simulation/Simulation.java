@@ -57,7 +57,7 @@ public class Simulation extends Thread {
         List<Vehicle> vehicles=VehicleGenerator.generate();
         Vehicle.setList(vehicles);
         List<Terminal> terminals = Collections.synchronizedList(new ArrayList<>());
-        terminals.addAll(List.of(new CustomsTerminal(),new TruckCustomsTerminal(),new PoliceTerminal(), new PoliceTerminal(), new TruckPoliceTerminal()));
+        terminals.addAll(List.of(new CustomsTerminal("C1"),new TruckCustomsTerminal("CK"),new PoliceTerminal("P1"), new PoliceTerminal("P2"), new TruckPoliceTerminal("P3")));
         TerminalFileWatcher tfw= new TerminalFileWatcher(terminals);
         tfw.start();    
         Vehicle.terminals=terminals;

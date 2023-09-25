@@ -20,6 +20,9 @@ public class TruckCustomsTerminal extends CustomsTerminal{
             e.printStackTrace();
         }
     }
+    public TruckCustomsTerminal(String name){
+        super(name);
+    }
     public Boolean checkType(Vehicle veh){
         return(veh instanceof Truck);
     }
@@ -34,10 +37,10 @@ public class TruckCustomsTerminal extends CustomsTerminal{
         if(truck.needDoc){
             Doc doc=truck.generateDocumentation();
             if(doc!=null)SimulationLog.getInstance().addMessage("Generated truck documentation, "+current.getName());
-            if(truck.declaredWeight<truck.realWeight){
-                SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
-                return false;
-            }
+        }
+        if(truck.declaredWeight<truck.realWeight){
+            SimulationLog.getInstance().CustomsStopped("Truck "+current.getName()+" is heavier than declared, Vehicle stopped");
+            return false;
         }
         
         return true;
